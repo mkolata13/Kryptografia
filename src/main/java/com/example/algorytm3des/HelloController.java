@@ -2,6 +2,7 @@ package com.example.algorytm3des;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -36,7 +37,12 @@ public class HelloController {
     private TextArea output;
     @FXML
     private Button wczytajPlik;
+    @FXML
+    private RadioButton wyborPlik;
+    @FXML
+    private RadioButton wyborTekst;
 
+    private boolean onTekst = true;
     private byte[] tekstJawny;
     private byte[] szyfrogram;
     private byte[][] klucze = new byte[3][];
@@ -52,9 +58,9 @@ public class HelloController {
 
     @FXML
     public void generate() {
-        Klucz1.setText(konwerter.bytesToHexString(generateKey(16)));
-        Klucz2.setText(konwerter.bytesToHexString(generateKey(16)));
-        Klucz3.setText(konwerter.bytesToHexString(generateKey(16)));
+        Klucz1.setText(konwerter.bytesToHexString(generateKey(8)));
+        Klucz2.setText(konwerter.bytesToHexString(generateKey(8)));
+        Klucz3.setText(konwerter.bytesToHexString(generateKey(8)));
     }
 
     private byte[] generateKey(int keyLengthBytes) {
@@ -70,9 +76,15 @@ public class HelloController {
         this.klucze[1] = konwerter.hexStringToByteArray(Klucz2.getText());
         this.klucze[2] = konwerter.hexStringToByteArray(Klucz3.getText());
 
-        String wiadomosc = input.getText();
-        String wynik = Encrypt(wiadomosc, klucze, true);
-        output.setText(wynik);
+        if (onTekst) {
+            String wiadomosc = input.getText();
+            tekstJawny = wiadomosc.getBytes(StandardCharsets.UTF_8);
+            szyfrogram = Encrypt(tekstJawny, klucze, true);
+            output.setText(konwerter.bytesToHexString(szyfrogram));
+        } else {
+            szyfrogram = Encrypt(tekstJawny, klucze, true);
+            output.setText(konwerter.bytesToHexString(szyfrogram));
+        }
     }
 
     @FXML
@@ -81,10 +93,17 @@ public class HelloController {
         this.klucze[1] = konwerter.hexStringToByteArray(Klucz2.getText());
         this.klucze[2] = konwerter.hexStringToByteArray(Klucz3.getText());
 
-        String szyfr = output.getText();
-        String wynik = Encrypt(szyfr, klucze, false);
-        input.setText(wynik);
+        if (onTekst) {
+            String szyfr = output.getText();
+            byte[] szyfrogramBytes = konwerter.hexStringToByteArray(szyfr);
+            tekstJawny = Encrypt(szyfrogramBytes, klucze, false);
+            input.setText(new String(tekstJawny, StandardCharsets.UTF_8));
+        } else {
+            tekstJawny = Encrypt(szyfrogram, klucze, false);
+            input.setText(new String(tekstJawny, StandardCharsets.UTF_8));
+        }
     }
+
 
     @FXML
     public void dodajPlik() {
@@ -105,25 +124,19 @@ public class HelloController {
         }
     }
 
-    public String Encrypt(String message, byte[][] keys, boolean encrypt) throws Exception {
-        byte[] bytes = message.getBytes(StandardCharsets.UTF_8);
+    public byte[] Encrypt(byte[] message, byte[][] keys, boolean encrypt) throws Exception {
         byte[] encryptedBytes;
         byte[] decryptedBytes;
 
         if (encrypt) {
-            if (tekstJawny != null) {
-                szyfrogram = algorytm.TripleDES_Encrypt(bytes, keys);
-            }
-            encryptedBytes = algorytm.TripleDES_Encrypt(bytes, keys);
-            return konwerter.bytesToHexString(encryptedBytes);
+            encryptedBytes = algorytm.TripleDES_Encrypt(message, keys);
+            return encryptedBytes;
         } else {
-            if (szyfrogram != null) {
-                tekstJawny = algorytm.TripleDES_Decrypt(szyfrogram, keys);
-            }
-            decryptedBytes = algorytm.TripleDES_Decrypt(konwerter.hexStringToByteArray(message), keys);
-            return new String(decryptedBytes, StandardCharsets.UTF_8);
+            decryptedBytes = algorytm.TripleDES_Decrypt(message, keys);
+            return decryptedBytes;
         }
     }
+
 
     @FXML
     public void zapiszSzyfrDoPliku() {
@@ -150,4 +163,19 @@ public class HelloController {
         }
     }
 
+    @FXML
+    public void onWyborPlikClick() {
+        onTekst = false;
+        wyborTekst.setSelected(false);
+        input.setDisable(true);
+        wczytajPlik.setDisable(false);
+    }
+
+    @FXML
+    public void onWyborTekstClick() {
+        onTekst = true;
+        wyborPlik.setSelected(false);
+        input.setDisable(false);
+        wczytajPlik.setDisable(true);
+    }
 }

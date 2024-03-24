@@ -20,6 +20,8 @@
         <Label layoutX="527.0" layoutY="27.0" prefHeight="17.0" prefWidth="44.0" text="Klucz 3" />
         <Button fx:id="zapiszTekstJawnyDoPliku" layoutX="116.0" layoutY="545.0" mnemonicParsing="false" onAction="#zapiszJawnyDoPliku" prefHeight="25.0" prefWidth="122.0" text="Zapisz do pliku" />
         <Button fx:id="zapiszZaszyfrowanyTekstDoPliku" layoutX="563.0" layoutY="545.0" mnemonicParsing="false" onAction="#zapiszSzyfrDoPliku" prefHeight="25.0" prefWidth="122.0" text="Zapisz do pliku" />
-        <Button fx:id="wczytajPlik" layoutX="138.0" layoutY="115.0" mnemonicParsing="false" onAction="#dodajPlik" text="Załaduj plik" />
+        <Button fx:id="wczytajPlik" layoutX="177.0" layoutY="110.0" mnemonicParsing="false" onAction="#dodajPlik" text="Załaduj plik" />
+      <RadioButton fx:id="wyborPlik" onAction="#onWyborPlikClick" layoutX="54.0" layoutY="99.0" mnemonicParsing="false" text="Plik" />
+      <RadioButton fx:id="wyborTekst" onAction="#onWyborTekstClick" layoutX="54.0" layoutY="123.0" mnemonicParsing="false" text="Tekst" />
     </children>
 </Pane>
