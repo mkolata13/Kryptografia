@@ -200,20 +200,33 @@ public class DES {
     }
 
     byte[] sBoxFunction(byte[] data) {
+        // Podział danych na grupy po 6 bitów
         data = divide48BitsTo6BitGroups(data);
+
+        // Inicjalizacja tablicy wynikowej
         byte[] result = new byte[data.length / 2];
 
+        // Przetwarzanie każdej grupy 6 bitów
         int halfByte = 0;
         for (int b = 0; b < data.length; b++) {
             byte valByte = data[b];
-            int r = 2 * (valByte >> 7 & 0x0001) + (valByte >> 2 & 0x0001);
-            int c = valByte >> 3 & 0x000F;
-            int val = sBoxes[b][r][c];
-            if (b % 2 == 0)
+
+            // Obliczanie indeksu w tablicy sBox
+            int row = 2 * (valByte >> 7 & 0x0001) + (valByte >> 2 & 0x0001);
+            int col = valByte >> 3 & 0x000F;
+
+            // Pobieranie wartości z odpowiedniego sBox
+            int val = sBoxes[b][row][col];
+
+            // Składanie wyniku z dwóch części 4-bitowych
+            if (b % 2 == 0) {
                 halfByte = val;
-            else
+            }
+            else {
                 result[b / 2] = (byte) (16 * halfByte + val);
+            }
         }
+
         return result;
     }
 
