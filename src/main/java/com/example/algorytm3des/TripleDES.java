@@ -11,7 +11,7 @@ public class TripleDES extends DES {
         subKeys2 = generateSubKeys(keys[1]);
         subKeys3 = generateSubKeys(keys[2]);
 
-        for (int i = 0; i < paddedData.length; i += 8) {
+        for (int i = 0; i < data.length; i += 8) {
             byte[] block = Arrays.copyOfRange(paddedData, i, i + 8);
             byte[] encryptedBlock = encryptBlock(block);
             System.arraycopy(encryptedBlock, 0, encryptedData, i, 8);
