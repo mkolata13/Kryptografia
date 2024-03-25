@@ -53,10 +53,8 @@ public class DES {
     };
 
     // Permutation P (Feistel function)
-    private int[] P = { 16,  7, 20, 21, 29, 12, 28, 17,
-                         1, 15, 23, 26,  5, 18, 31, 10,
-                         2,  8, 24, 14, 32, 27,  3,  9,
-                        19, 13, 30,  6, 22, 11,  4, 25
+    private int[] P = { 16,  7, 20, 21, 29, 12, 28, 17, 1, 15, 23, 26,  5, 18, 31, 10,
+                         2,  8, 24, 14, 32, 27,  3,  9, 19, 13, 30,  6, 22, 11,  4, 25
     };
 
     // permutacja klucza poczatkowa 64bit -> 56bit
@@ -71,24 +69,25 @@ public class DES {
     };
 
     // permutacja klucza dla i rundy 56bit -> 48bit
-    private static int[] PC2 = { 14, 17, 11, 24, 1, 5, 3, 28,
-                                15, 6, 21, 10, 23, 19, 12, 4,
-                                26, 8, 16, 7, 27, 20, 13, 2,
-                                41, 52, 31, 37, 47, 55, 30, 40,
-                                51, 45, 33, 48, 44, 49, 39, 56,
-                                34, 53, 46, 42, 50, 36, 29, 32
+    private int[] PC2 = { 14, 17, 11, 24, 1, 5, 3, 28, 15, 6, 21, 10,
+                        23, 19, 12, 4, 26, 8, 16, 7, 27, 20, 13, 2,
+                        41, 52, 31, 37, 47, 55, 30, 40, 51, 45, 33, 48,
+                        44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32
     };
 
     // liczba przesuniec klucza dla i rundy
     private int[] keyShift = { 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1 };
 
     // permutacja rozszerzenia dla funkcji feinstela
-    private int[] expansionTable = { 32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9, 8,
-            9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17, 16, 17, 18, 19, 20, 21,
-            20, 21, 22, 23, 24, 25, 24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32,
-            1 };
+    private int[] expansionTable = { 32, 1, 2, 3, 4, 5,
+                                    4, 5, 6, 7, 8, 9, 8,
+                                    9, 10, 11, 12, 13, 12, 13,
+                                    14, 15, 16, 17, 16, 17, 18,
+                                    19, 20, 21, 20, 21, 22, 23,
+                                    24, 25, 24, 25, 26, 27, 28,
+                                    29, 28, 29, 30, 31, 32, 1
+    };
 
-    // liczby ilosc blokow bajtow(po 8 bitow) dla zadanej ilosci bitow
     int countBytesFromBits(int numOfBits) {
         return ((numOfBits - 1) / 8 + 1);
     }
@@ -200,7 +199,6 @@ public class DES {
         return result;
     }
 
-    // do ogarniecia
     byte[] sBoxFunction(byte[] data) {
         data = divide48BitsTo6BitGroups(data);
         byte[] result = new byte[data.length / 2];
@@ -222,6 +220,7 @@ public class DES {
     byte[] divide48BitsTo6BitGroups(byte[] data) {
         int numOfBytes = (8 * data.length - 1) / 6 + 1;
         byte[] result = new byte[numOfBytes];
+
         for (int i = 0; i < numOfBytes; i++)
         {
             for (int j = 0; j < 6; j++)
@@ -242,13 +241,13 @@ public class DES {
         R = getBits(result, 32, 32);
 
         for (int i = 0; i < 16; i++) {
-            byte[] tmpR = R;
+            byte[] _R = R;
             if(encrypt)
                 R = feistelFunction(R,subkeys[i]);
             else
                 R = feistelFunction(R, subkeys[15-i]);
             R = xor(L, R);
-            L = tmpR;
+            L = _R;
         }
 
         result = mergeTwoBitTables(R, 32, L, 32);
