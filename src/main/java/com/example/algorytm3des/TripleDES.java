@@ -37,17 +37,17 @@ public class TripleDES extends DES {
     }
     byte[] encryptBlock(byte[] block) {
         byte[] result = Arrays.copyOf(block, block.length);
-        result = encrypt64Bloc(result, subKeys1, true);
-        result = encrypt64Bloc(result, subKeys2, false);
-        result = encrypt64Bloc(result, subKeys3, true);
+        result = encrypt64BitBlock(result, subKeys1, true);
+        result = encrypt64BitBlock(result, subKeys2, false);
+        result = encrypt64BitBlock(result, subKeys3, true);
         return result;
     }
 
     byte[] decryptBlock(byte[] block) {
         byte[] result = Arrays.copyOf(block, block.length);
-        result = encrypt64Bloc(result, subKeys3, false);
-        result = encrypt64Bloc(result, subKeys2, true);
-        result = encrypt64Bloc(result, subKeys1, false);
+        result = encrypt64BitBlock(result, subKeys3, false);
+        result = encrypt64BitBlock(result, subKeys2, true);
+        result = encrypt64BitBlock(result, subKeys1, false);
         return result;
     }
 

@@ -80,12 +80,13 @@ public class DES {
 
     // permutacja rozszerzenia dla funkcji feinstela
     private int[] expansionTable = { 32, 1, 2, 3, 4, 5,
-                                    4, 5, 6, 7, 8, 9, 8,
-                                    9, 10, 11, 12, 13, 12, 13,
-                                    14, 15, 16, 17, 16, 17, 18,
-                                    19, 20, 21, 20, 21, 22, 23,
-                                    24, 25, 24, 25, 26, 27, 28,
-                                    29, 28, 29, 30, 31, 32, 1
+                                    4, 5, 6, 7, 8, 9,
+                                    8, 9, 10, 11, 12, 13,
+                                    12, 13, 14, 15, 16, 17,
+                                    16, 17, 18, 19, 20, 21,
+                                    20, 21, 22, 23, 24, 25,
+                                    24, 25, 26, 27, 28, 29,
+                                    28, 29, 30, 31, 32, 1
     };
 
     int countBytesFromBits(int numOfBits) {
@@ -245,7 +246,7 @@ public class DES {
         return result;
     }
 
-    public byte[] encrypt64Bloc(byte[] block, byte[][] subkeys, boolean encrypt) {
+    public byte[] encrypt64BitBlock(byte[] block, byte[][] subkeys, boolean encrypt) {
         byte[] result = block;
         byte[] R;
         byte[] L;
